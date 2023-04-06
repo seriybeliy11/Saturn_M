@@ -1,3 +1,3 @@
-access_token = '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'
+access_token = 'your_token'
 owner = "delovoyhomie"
 repo = "ton-footsteps"
