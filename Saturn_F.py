@@ -8,38 +8,22 @@ import csv
 from datetime import datetime
 import statistics
 import pandas as pd
-import plotly.graph_objs as go
+from Saturn_M import * 
 
-def get_contributors():
+def dst_get_contributors(start_date, end_date):
     try:
         url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
         headers = {"Authorization": f"Bearer {access_token}"}
+        params = {"since": start_date.isoformat(), "until": end_date.isoformat()}
 
-
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, params=params)
         contributors = response.json()
-        #print(contributors)
-        #for contributor in contributors:
-            #print("Contributor:")
-            #print(f"\tID: {contributor['author']['id']}")
-            #print(f"\tLogin: {contributor['author']['login']}")
-            #print(f"\tTotal commits: {contributor['total']}")
-            #print("Weeks:")
-        #for week in contributor['weeks']:
-            #print(f"\tStart of week: {week['w']}")
-            #print(f"\tNumber of additions: {week['a']}")
-            #print(f"\tNumber of deletions: {week['d']}")
-            #print(f"\tNumber of commits: {week['c']}")
-            #print(f"\tEnd of week: {week['w'] + 604800}") # 604800 seconds = 1 week
 
         frame_div = []
         for contributor in contributors:
-            #print(f"\tTotal commits: {contributor['total']}")
             frame_div.append(contributor['total'])
 
-        #print(frame_div)
         commits_average = sum(frame_div) / len(frame_div)
-        #print(commits_average)
 
         list_high_average = []
         for contributor in contributors:
@@ -54,10 +38,11 @@ def get_contributors():
     except:
         print('Something Wrong...Try later')
 
-def get_issues():
+
+def dst_get_issues(start_date, end_date):
     url = f"https://api.github.com/repos/ton-society/{repo}/issues"
     headers = {"Authorization": f"Bearer {access_token}"}
-    params = {"per_page": 30, "state": "all"}
+    params = {"per_page": 30, "state": "all", "since": start_date, "until": end_date}
 
     getting_issues = []
     page_number = 1
@@ -94,7 +79,7 @@ def get_issues():
     }
 
 
-def get_pulls():
+def dst_get_pulls(start_date, end_date):
     url = f"https://api.github.com/repos/ton-society/{repo}/pulls"
     headers = {"Authorization": f"Bearer {access_token}"}
     params = {"per_page": 30, "state": "all"}
@@ -118,18 +103,22 @@ def get_pulls():
     closed_pulls = []
 
     for pull in getting_pulls:
-        if pull["state"] == "open":
-            open_pulls.append(pull)
-        elif pull["state"] == "closed":
-            closed_pulls.append(pull)
+        created_at = datetime.strptime(pull['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+        if start_date <= created_at <= end_date:
+            if pull["state"] == "open":
+                open_pulls.append(pull)
+            elif pull["state"] == "closed":
+                closed_pulls.append(pull)
 
     return {
-        'Number of pulls': len(closed_pulls) + len(open_pulls)
+        'Number of pulls': len(closed_pulls) + len(open_pulls),
+        'Number of open pulls': len(open_pulls),
+        'Number of closed pulls': len(closed_pulls)
     }
 
 
-def average_time_isseu():
-    url = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
+def dst_average_time_issue():
+    url = f"https://api.github.com/repos/ton-society/{repo}/issues"
     headers = {"Authorization": f"Bearer {access_token}"}
     params = {"state": "all", "per_page": 100}
 
@@ -146,17 +135,17 @@ def average_time_isseu():
             break
         for issue in issues:
             if issue.get("closed_at"):
-                created_time = datetime.strptime(issue["created_at"], '%Y-%m-%dT%H:%M:%SZ').timestamp()
-                closed_time = datetime.strptime(issue["closed_at"], '%Y-%m-%dT%H:%M:%SZ').timestamp()
+                created_time = datetime.fromisoformat(issue["created_at"].replace('Z', '+00:00')).timestamp()
+                closed_time = datetime.fromisoformat(issue["closed_at"].replace('Z', '+00:00')).timestamp()
                 delta_times.append(closed_time - created_time)
                 all_issues.append(issue)
         params["page"] = params.get("page", 1) + 1
 
-
     average_time = statistics.mean(delta_times) // 86400
     print(f"Average solving time: {average_time} days")
 
-def get_data_contributors():
+
+def dst_plot_contributors(start_date, end_date):
     try:
         url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
         headers = {"Authorization": f"Bearer {access_token}"}
@@ -164,98 +153,15 @@ def get_data_contributors():
         response = requests.get(url, headers=headers)
         contributors = response.json()
 
-        frame_div = []
+        filtered_contributors = []
         for contributor in contributors:
-            frame_div.append(contributor['total'])
+            if start_date <= contributor['week'] <= end_date:
+                filtered_contributors.append(contributor)
 
-        commits_average = sum(frame_div) / len(frame_div)
-
-        list_high_average = []
-        for contributor in contributors:
-            if contributor['total'] > commits_average:
-                list_high_average.append(contributor['author']['login'])
-
-        all_commits = sum(frame_div)
-
-
-        data = {
-            'regular contributors': len(list_high_average),
-            'active contributors': sum(1 for c in contributors if c["total"] > 0),
-            'total contributions': all_commits
-        }
-
-        df = pd.DataFrame(data, index=[0])
-        df.to_csv('contributors.csv', index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def data_get_issues():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/issues"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        issues = response.json()
-
-        df = pd.DataFrame(issues)
-        df.to_csv("issues.csv", index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def data_get_pulls():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        pulls = response.json()
-
-
-        df = pd.DataFrame(pulls)
-        df.to_csv("pulls.csv", index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def data_average_time_issue():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/issues"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        issues = response.json()
-
-        df = pd.DataFrame(average_time_issue)
-        df.to_csv("average_time_issue.csv", index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def charts_contributors():
-    try:
-        contributors_df = pd.read_csv('contributors.csv')
-        fig, ax = plt.subplots(figsize=(6, 6))
-        ax.bar(['Active', 'Regular'], [contributors_df['active contributors'][0], contributors_df['regular contributors'][0]])
-        ax.set_xlabel('Contributor Type')
-        ax.set_ylabel('Number of Contributors')
-        ax.set_title('Active vs Regular Contributors')
-        plt.show()
-    except:
-        print('Something Wrong...Try later')
-
-def plot_contributors():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        contributors = response.json()
-        commits = [contributor['total'] for contributor in contributors]
+        commits = [contributor['total'] for contributor in filtered_contributors]
 
         fig = go.Figure(
-            data=[go.Bar(x=[contributor['author']['login'] for contributor in contributors], y=commits)],
+            data=[go.Bar(x=[contributor['author']['login'] for contributor in filtered_contributors], y=commits)],
             layout_title_text="Total Commits by Contributor"
         )
 
@@ -263,11 +169,24 @@ def plot_contributors():
     except:
         print("Something wrong...Try later")
 
-def plot_issues():
+def get_commits(start_date, end_date):
+    try:
+        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        headers = {"Authorization": f"Bearer {access_token}"}
+        params = {"since": start_date, "until": end_date}
+
+        response = requests.get(url, headers=headers, params=params)
+        commits = response.json()
+
+        return commits
+    except:
+        print("Something wrong...Try later")
+
+def dst_plot_issues(start_date, end_date):
     try:
         url = f"https://api.github.com/repos/ton-society/{repo}/issues"
         headers = {"Authorization": f"Bearer {access_token}"}
-        params = {"per_page": 30, "state": "all"}
+        params = {"state": "all", "since": start_date, "until": end_date}
 
         getting_issues = []
         page_number = 1
@@ -296,19 +215,18 @@ def plot_issues():
 
         fig = go.Figure(
             data=[go.Pie(labels=["Open Issues", "Closed Issues"], values=[len(open_issues), len(closed_issues)])],
-            layout_title_text="Open vs. Closed Issues"
+            layout_title_text=f"Open vs. Closed Issues ({start_date} to {end_date})"
         )
 
         fig.show()
     except:
         print("Something wrong...Try later")
 
-
-def plot_pulls():
+def dst_plot_pulls(start_date, end_date):
     try:
         url = f"https://api.github.com/repos/ton-society/{repo}/pulls"
         headers = {"Authorization": f"Bearer {access_token}"}
-        params = {"per_page": 30, "state": "all"}
+        params = {"state": "all", "since": start_date, "until": end_date}
 
         getting_pulls = []
         page_number = 1
@@ -333,27 +251,10 @@ def plot_pulls():
                 open_pulls.append(pull)
             elif pull["state"] == "closed":
                 closed_pulls.append(pull)
-
         fig = go.Figure(
             data=[go.Pie(labels=["Open Pull Requests", "Closed Pull Requests"], values=[len(open_pulls), len(closed_pulls)])],
-            layout_title_text="Open vs. Closed Pull Requests"
+            layout_title_text=f"Open vs. Closed Pull Requests ({start_date} to {end_date})"
         )
-
-        fig.show()
-    except:
-        print("Something wrong...Try later")
-
-def issues_x_pulls():
-    try:
-        issues_count = len(get_issues())
-        pulls_count = len(get_pulls())
-        fig = go.Figure(data=[go.Bar(x=['Issues'], y=[issues_count], name='Issues', marker_color='#8B008B'),
-                              go.Bar(x=['Pull Requests'], y=[pulls_count], name='Pull Requests', marker_color='#A9A9A9')])
-
-        fig.update_layout(title_text='Number of open tasks and merge requests')
-
-        fig.update_xaxes(title_text="Type")
-        fig.update_yaxes(title_text="Quantity")
 
         fig.show()
     except:
