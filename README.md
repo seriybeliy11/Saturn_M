@@ -5,29 +5,29 @@ Fast M for The TON Footsteps
 ## Saturn_M file:
 
 ### get_contributors()
-Gets information about contributors to the project on GitHub and displays statistics about the number of regular and active contributors, as well as the total number of commits from community members.
+Get's information about contributors to the project on GitHub and displays statistics about the number of regular and active contributors, as well as the total number of commits from community members.
 
 ### get_issues()
-Gets information about all tasks (issues) of the project on GitHub and displays statistics about the number of open and closed tasks.
+Get's information about all tasks (issues) of the project on GitHub and displays statistics about the number of open and closed tasks.
 
 
 ### get_pulls()
-Gets information about all pull requests of the project on GitHub and displays statistics about the number of pull requests.
+Get's information about all pull requests of the project on GitHub and displays statistics about the number of pull requests.
 
 ### average_time_isseu()
-Gets information about the solution time of project tasks on GitHub and outputs the average solution time in days.
+Get's information about the solution time of project tasks on GitHub and outputs the average solution time in days.
 
 ### plot_contributors() 
-Shows the total number of commits made by each contributor to the repository. It makes a request to the GitHub API to retrieve the contributors and their commit counts, and then creates a bar chart using the Plotly library to display the results.
+Show's the total number of commits made by each contributor to the repository. It makes a request to the GitHub API to retrieve the contributors and their commit counts, and then creates a bar chart using the Plotly library to display the results.
 
 ### plot_issues() 
-Shows various metrics related to issues in the repository, including the number of open and closed issues, the distribution of days that open issues have been open, and the number of open issues over time. It uses the Plotly and Pandas libraries to create pie charts, histograms, and line charts to display the data.
+Show's various metrics related to issues in the repository, including the number of open and closed issues, the distribution of days that open issues have been open, and the number of open issues over time. It uses the Plotly and Pandas libraries to create pie charts, histograms, and line charts to display the data.
 
 ### plot_pulls() 
-Shows the number of open and closed pull requests in the repository. It makes a request to the GitHub API to retrieve the pull requests and their state (open or closed), and then creates a pie chart using the Plotly library to display the results.
+Show's the number of open and closed pull requests in the repository. It makes a request to the GitHub API to retrieve the pull requests and their state (open or closed), and then creates a pie chart using the Plotly library to display the results.
 
 ### issues_x_pulls() 
-Shows the total number of open issues and pull requests in the repository. It retrieves the number of open issues and pull requests using the get_issues() and get_pulls() functions (which are not shown in the code), and then creates a bar chart using the Plotly library to display the results.
+Show's the total number of open issues and pull requests in the repository. It retrieves the number of open issues and pull requests using the get_issues() and get_pulls() functions (which are not shown in the code), and then creates a bar chart using the Plotly library to display the results.
 
 ### viz_contributors()
 This feature is designed to visualize data about project members on GitHub. It uses the GitHub API to retrieve information about each contributor's contributions and plots the number of commits each contributor has made over time. This can help you analyze user activity, determine who is most active and who has contributed to your project, and help you motivate users to contribute to your project.
@@ -71,3 +71,16 @@ This function takes in two parameters, start_date and end_date, which represent 
 
 ### dst_average_time_issue()
 This function calculates the average time it takes to solve an issue in the TON Footsteps repository. The function uses the GitHub API to retrieve data on all the issues that were closed in the repository and calculates the time difference between the creation time and closing time of each issue. The function returns the average time it takes to solve an issue in days.
+
+# Attention !!!
+Storing sensitive information, such as access tokens, in plaintext in code can be insecure. It is recommended that you store sensitive information, such as access tokens, in environment variables.
+
+You can set up environment variables in your operating system to use in your Python programs. Here is an example of how you can use environment variables in Python:
+```
+import os
+access_token = os.environ.get('GITHUB_ACCESS_TOKEN')
+owner = os.environ.get('GITHUB_REPO_OWNER')
+repo = os.environ.get('GITHUB_REPO_NAME')
+```
+
+Note that you must set the values of these environment variables in your operating system before you can use them in your Python script. You can set them on the command line or in a configuration file such as ~/.bashrc or ~/.bash_profile if you are using a Unix-like operating system.
