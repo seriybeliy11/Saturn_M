@@ -9,6 +9,7 @@ from datetime import datetime
 import statistics
 import pandas as pd
 import plotly.graph_objs as go
+from openpyxl import Workbook
 
 def get_contributors():
     try:
@@ -156,94 +157,6 @@ def average_time_isseu():
     average_time = statistics.mean(delta_times) // 86400
     print(f"Average solving time: {average_time} days")
 
-def get_data_contributors():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        contributors = response.json()
-
-        frame_div = []
-        for contributor in contributors:
-            frame_div.append(contributor['total'])
-
-        commits_average = sum(frame_div) / len(frame_div)
-
-        list_high_average = []
-        for contributor in contributors:
-            if contributor['total'] > commits_average:
-                list_high_average.append(contributor['author']['login'])
-
-        all_commits = sum(frame_div)
-
-
-        data = {
-            'regular contributors': len(list_high_average),
-            'active contributors': sum(1 for c in contributors if c["total"] > 0),
-            'total contributions': all_commits
-        }
-
-        df = pd.DataFrame(data, index=[0])
-        df.to_csv('contributors.csv', index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def data_get_issues():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/issues"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        issues = response.json()
-
-        df = pd.DataFrame(issues)
-        df.to_csv("issues.csv", index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def data_get_pulls():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        pulls = response.json()
-
-
-        df = pd.DataFrame(pulls)
-        df.to_csv("pulls.csv", index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def data_average_time_issue():
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/issues"
-        headers = {"Authorization": f"Bearer {access_token}"}
-
-        response = requests.get(url, headers=headers)
-        issues = response.json()
-
-        df = pd.DataFrame(average_time_issue)
-        df.to_csv("average_time_issue.csv", index=False)
-
-    except:
-        print('Something Wrong...Try later')
-
-def charts_contributors():
-    try:
-        contributors_df = pd.read_csv('contributors.csv')
-        fig, ax = plt.subplots(figsize=(6, 6))
-        ax.bar(['Active', 'Regular'], [contributors_df['active contributors'][0], contributors_df['regular contributors'][0]])
-        ax.set_xlabel('Contributor Type')
-        ax.set_ylabel('Number of Contributors')
-        ax.set_title('Active vs Regular Contributors')
-        plt.show()
-    except:
-        print('Something Wrong...Try later')
 
 def plot_contributors():
     try:
@@ -284,7 +197,6 @@ def plot_issues():
             getting_issues.extend(page_issues)
             page_number += 1
 
-
         open_issues = []
         closed_issues = []
 
@@ -294,14 +206,33 @@ def plot_issues():
             elif issue["state"] == "closed":
                 closed_issues.append(issue)
 
-        fig = go.Figure(
+        fig1 = go.Figure(
             data=[go.Pie(labels=["Open Issues", "Closed Issues"], values=[len(open_issues), len(closed_issues)])],
             layout_title_text="Open vs. Closed Issues"
         )
+        fig1.show()
 
-        fig.show()
+        open_days = [(datetime.datetime.utcnow() - datetime.datetime.fromisoformat(issue['created_at'][:-1])).days for issue in open_issues]
+        fig2 = px.histogram(x=open_days, nbins=20, title='Distribution of Days for Open Issues')
+        fig2.show()
+
+        close_days = [(datetime.datetime.fromisoformat(issue['closed_at'][:-1]) - datetime.datetime.fromisoformat(issue['created_at'][:-1])).days for issue in closed_issues]
+        fig3 = px.histogram(x=close_days, nbins=20, title='Distribution of Days to Close Issues')
+        fig3.show()
+
+        open_dates = [issue['created_at'][:-1] for issue in open_issues]
+        df1 = pd.DataFrame({'date': open_dates, 'count': [1]*len(open_issues)})
+        df1 = df1.groupby('date').sum().reset_index()
+        fig4 = px.line(df1, x='date', y='count', title='Open Issues over Time')
+        fig4.show()
+
+        close_dates = [issue['closed_at'][:-1] for issue in closed_issues]
+        df2 = pd.DataFrame({'date': close_dates, 'count': [1]*len(closed_issues)})
+        df2 = df2.groupby('date').sum().reset_index()
+        fig5 = px.line(df2, x='date', y='count', title='Closed Issues over Time')
+        fig5.show()
     except:
-        print("Something wrong...Try later")
+        print('...')
 
 
 def plot_pulls():
@@ -358,3 +289,217 @@ def issues_x_pulls():
         fig.show()
     except:
         print("Something wrong...Try later")
+def viz_contributors():
+    try:
+        url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        response = requests.get(url, headers=headers)
+        contributors = response.json()
+
+        authors = [contributor['author']['login'] for contributor in contributors]
+
+        dates = []
+        for contributor in contributors:
+            for week in contributor['weeks']:
+                if week['w'] not in dates:
+                    dates.append(week['w'])
+
+        values = []
+        for author in authors:
+            author_values = []
+            for date in dates:
+                total = 0
+                for contributor in contributors:
+                    if contributor['author']['login'] == author:
+                        for week in contributor['weeks']:
+                            if week['w'] == date:
+                                total += week['a'] + week['d']
+                author_values.append(total)
+            values.append(author_values)
+
+        traces = []
+        for i in range(len(authors)):
+            trace = go.Scatter(x=dates, y=values[i], mode='lines', name=authors[i])
+            traces.append(trace)
+        layout = go.Layout(title=f"Contributors to {owner}/{repo}", xaxis={'title': 'Date'}, yaxis={'title': 'Commits'})
+        fig = go.Figure(data=traces, layout=layout)
+        fig.show()
+    except:
+        print("Something wrong...Try later")
+
+def complex_plot_contributors():
+        url = f"https://api.github.com/repos/{owner}/{repo}/stats/contributors"
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            print(f"Error: {e}")
+            return
+
+        contributors = response.json()
+
+        names = [contributor["author"]["login"] for contributor in contributors]
+        total_commits = [contributor["total"] for contributor in contributors]
+        total_additions = [sum(week["a"] for week in contributor["weeks"]) for contributor in contributors]
+        total_deletions = [sum(week["d"] for week in contributor["weeks"]) for contributor in contributors]
+        total_changes = [sum(week["c"] for week in contributor["weeks"]) for contributor in contributors]
+
+        fig = make_subplots(rows=1, cols=3, subplot_titles=("Total Commits", "Total Changes", "Total Additions vs. Deletions"))
+
+        fig.add_trace(
+            go.Scatter(
+                x=total_commits,
+                y=total_changes,
+                mode="markers",
+                marker=dict(
+                    size=total_additions,
+                    sizemode='area',
+                    sizeref=2.0 * max(total_additions) / (50.0 ** 2),
+                    sizemin=4
+                ),
+                text=names
+            ),
+            row=1, col=1
+        )
+
+        fig.add_trace(
+            go.Scatter(
+                x=names,
+                y=total_commits,
+                mode="lines",
+                line=dict(color="purple")
+            ),
+            row=1, col=2
+        )
+
+        fig.add_trace(
+            go.Histogram2dContour(
+                x=total_additions,
+                y=total_deletions,
+                colorscale="Blues",
+                reversescale=True,
+                xaxis="x3",
+                yaxis="y3"
+            ),
+            row=1, col=3
+        )
+
+        fig.update_layout(
+            title_text="Contributors Statistics",
+            showlegend=False,
+            height=400,
+            width=800,
+            xaxis=dict(title="Total Commits", showgrid=False, zeroline=False),
+            yaxis=dict(title="Total Changes", showgrid=False, zeroline=False),
+            xaxis3=dict(title="Total Additions", showgrid=False, zeroline=False, domain=[0.55, 1]),
+            yaxis3=dict(title="Total Deletions", showgrid=False, zeroline=False),
+            margin=dict(l=50, r=50, t=50, b=50),
+        )
+
+        fig.show()
+
+def complex_plot_issues():
+        url = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
+        headers = {"Authorization": f"Bearer {access_token}"}
+        params = {"state": "all", "per_page": 100}
+
+        response = requests.get(url, headers=headers, params=params)
+        data = response.json()
+
+        counts_opened = {}
+        counts_closed = {}
+        for issue in data:
+            date = issue["created_at"][:10]
+            if issue["state"] == "open":
+                if date not in counts_opened:
+                    counts_opened[date] = 1
+                else:
+                    counts_opened[date] += 1
+            else:
+                if date not in counts_closed:
+                    counts_closed[date] = 1
+                else:
+                    counts_closed[date] += 1
+
+        x = list(counts_opened.keys())
+        y1 = list(counts_opened.values())
+        y2 = list(counts_closed.values())
+
+        fig1 = go.Figure()
+        fig1.add_trace(go.Scatter(x=x, y=y1, mode="lines+markers", name="Opened"))
+        fig1.add_trace(go.Scatter(x=x, y=y2, mode="lines+markers", name="Closed"))
+        fig1.update_layout(title="Number of Issues Opened and Closed Over Time", xaxis_title="Date", yaxis_title="Number of Issues")
+
+        labels = []
+        for issue in data:
+            for label in issue["labels"]:
+                labels.append(label["name"])
+
+        fig2 = px.histogram(labels, nbins=len(set(labels)), title="Distribution of Issues by Label")
+        fig2.update_xaxes(title="Label")
+        fig2.update_yaxes(title="Number of Issues")
+
+        assignees = {}
+        for issue in data:
+            if issue["assignee"] is None:
+                if "Unassigned" not in assignees:
+                    assignees["Unassigned"] = 1
+                else:
+                    assignees["Unassigned"] += 1
+            else:
+                name = issue["assignee"]["login"]
+                if name not in assignees:
+                    assignees[name] = 1
+                else:
+                    assignees[name] += 1
+
+        fig3 = px.pie(values=list(assignees.values()), names=list(assignees.keys()), title="Percentage of Issues by Assignee")
+
+        fig1.show()
+        fig2.show()
+        fig3.show()
+
+def complex_plot_pulls():
+    url = "https://api.github.com/repos/ton-society/ton-footsteps/pulls"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    params = {"state": "all", "per_page": 100}
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
+
+    authors = set()
+    status_counts = {}
+    for item in data:
+        authors.add(item["user"]["login"])
+        status = item["state"]
+        if status in status_counts:
+            status_counts[status] += 1
+        else:
+            status_counts[status] = 1
+
+    pulls_by_author = {}
+    for author in authors:
+        count = sum(1 for item in data if item["user"]["login"] == author)
+        pulls_by_author[author] = count
+
+    layout1 = go.Layout(title="Number of pull requests by author", xaxis_title="Author", yaxis_title="Number")
+    fig1 = go.Figure(data=[go.Bar(x=list(pulls_by_author.keys()), y=list(pulls_by_author.values()))], layout=layout1)
+
+    labels = list(status_counts.keys())
+    values = list(status_counts.values())
+    layout2 = go.Layout(title="Stats pull requests")
+    fig2 = go.Figure(data=[go.Pie(labels=labels, values=values)], layout=layout2)
+
+    df = pd.DataFrame.from_dict(pulls_by_author, orient="index", columns=["number"])
+    df["author"] = df.index
+    counts = df.groupby("author").sum().reset_index()
+    x = counts["author"].tolist()
+    y = counts["number"].tolist()
+    layout3 = go.Layout(title="Number of pull requests made by each user", xaxis_title="User", yaxis_title="Number")
+    fig3 = go.Figure(data=[go.Bar(x=x, y=y)], layout=layout3)
+
+    fig1.show()
+    fig2.show()
+    fig3.show()

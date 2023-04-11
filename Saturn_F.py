@@ -8,7 +8,7 @@ import csv
 from datetime import datetime
 import statistics
 import pandas as pd
-from Saturn_M import * 
+from Saturn_M import *
 
 def dst_get_contributors(start_date, end_date):
     try:
@@ -169,19 +169,6 @@ def dst_plot_contributors(start_date, end_date):
     except:
         print("Something wrong...Try later")
 
-def get_commits(start_date, end_date):
-    try:
-        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-        headers = {"Authorization": f"Bearer {access_token}"}
-        params = {"since": start_date, "until": end_date}
-
-        response = requests.get(url, headers=headers, params=params)
-        commits = response.json()
-
-        return commits
-    except:
-        print("Something wrong...Try later")
-
 def dst_plot_issues(start_date, end_date):
     try:
         url = f"https://api.github.com/repos/ton-society/{repo}/issues"
@@ -259,3 +246,127 @@ def dst_plot_pulls(start_date, end_date):
         fig.show()
     except:
         print("Something wrong...Try later")
+
+def complex_dst_plot_pulls(start_date, end_date):
+    url = "https://api.github.com/repos/ton-society/ton-footsteps/pulls"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    params = {"state": "all", "per_page": 100, "since": start_date, "until": end_date}
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
+
+    authors = set()
+    status_counts = {}
+    for item in data:
+        authors.add(item["user"]["login"])
+        status = item["state"]
+        if status in status_counts:
+            status_counts[status] += 1
+        else:
+            status_counts[status] = 1
+
+    pulls_by_author = {}
+    for author in authors:
+        count = sum(1 for item in data if item["user"]["login"] == author)
+        pulls_by_author[author] = count
+
+    layout1 = go.Layout(title=f"Number of pull requests by author ({start_date} to {end_date})", xaxis_title="Author", yaxis_title="Number")
+    fig1 = go.Figure(data=[go.Bar(x=list(pulls_by_author.keys()), y=list(pulls_by_author.values()))], layout=layout1)
+
+    labels = list(status_counts.keys())
+    values = list(status_counts.values())
+    layout2 = go.Layout(title=f"Stats pull requests ({start_date} to {end_date})")
+    fig2 = go.Figure(data=[go.Pie(labels=labels, values=values)], layout=layout2)
+
+    df = pd.DataFrame.from_dict(pulls_by_author, orient="index", columns=["number"])
+    df["author"] = df.index
+    counts = df.groupby("author").sum().reset_index()
+    x = counts["author"].tolist()
+    y = counts["number"].tolist()
+    layout3 = go.Layout(title=f"Number of pull requests made by each user ({start_date} to {end_date})", xaxis_title="User", yaxis_title="Number")
+    fig3 = go.Figure(data=[go.Bar(x=x, y=y)], layout=layout3)
+
+    fig1.show()
+    fig2.show()
+    fig3.show()
+
+def complex_dst_plot_issues(start_date, end_date):
+    url = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    params = {"state": "all", "per_page": 100, "since": start_date, "until": end_date}
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
+
+    authors = set()
+    status_counts = {}
+    for item in data:
+        authors.add(item["user"]["login"])
+        status = item["state"]
+        if status in status_counts:
+            status_counts[status] += 1
+        else:
+            status_counts[status] = 1
+
+    issues_by_author = {}
+    for author in authors:
+        count = sum(1 for item in data if item["user"]["login"] == author)
+        issues_by_author[author] = count
+
+    layout1 = go.Layout(title=f"Number of issues by author ({start_date} to {end_date})", xaxis_title="Author", yaxis_title="Number")
+    fig1 = go.Figure(data=[go.Bar(x=list(issues_by_author.keys()), y=list(issues_by_author.values()))], layout=layout1)
+
+    labels = list(status_counts.keys())
+    values = list(status_counts.values())
+    layout2 = go.Layout(title=f"Stats issues ({start_date} to {end_date})")
+    fig2 = go.Figure(data=[go.Pie(labels=labels, values=values)], layout=layout2)
+
+    df = pd.DataFrame.from_dict(issues_by_author, orient="index", columns=["number"])
+    df["author"] = df.index
+    counts = df.groupby("author").sum().reset_index()
+    x = counts["author"].tolist()
+    y = counts["number"].tolist()
+    layout3 = go.Layout(title=f"Number of issues made by each user ({start_date} to {end_date})", xaxis_title="User", yaxis_title="Number")
+    fig3 = go.Figure(data=[go.Bar(x=x, y=y)], layout=layout3)
+
+    fig1.show()
+    fig2.show()
+    fig3.show()
+
+def complex_dst_plot_contributors(start_date, end_date):
+    url = "https://api.github.com/repos/ton-society/ton-footsteps/stats/contributors"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    params = {"since": start_date, "until": end_date}
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
+
+    contributors = set()
+    commits_by_contributor = {}
+    additions_by_contributor = {}
+    deletions_by_contributor = {}
+    for item in data:
+        for contributor in item["author"]:
+            contributors.add(contributor["login"])
+            if contributor["login"] in commits_by_contributor:
+                commits_by_contributor[contributor["login"]] += contributor["total"]
+                additions_by_contributor[contributor["login"]] += contributor["weeks"][-1]["a"]
+                deletions_by_contributor[contributor["login"]] += contributor["weeks"][-1]["d"]
+            else:
+                commits_by_contributor[contributor["login"]] = contributor["total"]
+                additions_by_contributor[contributor["login"]] = contributor["weeks"][-1]["a"]
+                deletions_by_contributor[contributor["login"]] = contributor["weeks"][-1]["d"]
+
+    layout1 = go.Layout(title=f"Number of commits by contributor ({start_date} to {end_date})", xaxis_title="Contributor", yaxis_title="Number")
+    fig1 = go.Figure(data=[go.Bar(x=list(commits_by_contributor.keys()), y=list(commits_by_contributor.values()))], layout=layout1)
+
+    layout2 = go.Layout(title=f"Additions vs deletions by contributor ({start_date} to {end_date})", xaxis_title="Contributor", yaxis_title="Number")
+    fig2 = go.Figure(data=[
+        go.Bar(name='Additions', x=list(additions_by_contributor.keys()), y=list(additions_by_contributor.values())),
+        go.Bar(name='Deletions', x=list(deletions_by_contributor.keys()), y=list(deletions_by_contributor.values()))
+    ], layout=layout2)
+    fig2.update_layout(barmode='stack')
+
+    layout3 = go.Layout(title=f"Number of contributors ({start_date} to {end_date})")
+    fig3 = go.Figure(data=[go.Pie(labels=['Contributors', 'Non-contributors'], values=[len(contributors), 1e6-len(contributors)])], layout=layout3)
+
+    fig1.show()
+    fig2.show()
+    fig3.show()
