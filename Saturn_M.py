@@ -10,6 +10,10 @@ import statistics
 import pandas as pd
 import plotly.graph_objs as go
 from openpyxl import Workbook
+import plotly.express as px
+from plotly.subplots import make_subplots
+from datetime import date
+
 
 def get_contributors():
     try:
@@ -402,65 +406,52 @@ def complex_plot_contributors():
         fig.show()
 
 def complex_plot_issues():
-        url = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
-        headers = {"Authorization": f"Bearer {access_token}"}
-        params = {"state": "all", "per_page": 100}
+    url = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    params = {"state": "all", "per_page": 100}
 
-        response = requests.get(url, headers=headers, params=params)
-        data = response.json()
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+    data = response.json()
 
-        counts_opened = {}
-        counts_closed = {}
-        for issue in data:
-            date = issue["created_at"][:10]
-            if issue["state"] == "open":
-                if date not in counts_opened:
-                    counts_opened[date] = 1
-                else:
-                    counts_opened[date] += 1
-            else:
-                if date not in counts_closed:
-                    counts_closed[date] = 1
-                else:
-                    counts_closed[date] += 1
+    counts_opened = {}
+    counts_closed = {}
+    labels = []
+    assignees = {}
+    for issue in data:
+        date = issue["created_at"][:10]
+        if issue["state"] == "open":
+            counts_opened[date] = counts_opened.get(date, 0) + 1
+        else:
+            counts_closed[date] = counts_closed.get(date, 0) + 1
 
-        x = list(counts_opened.keys())
-        y1 = list(counts_opened.values())
-        y2 = list(counts_closed.values())
+        for label in issue["labels"]:
+            labels.append(label["name"])
 
-        fig1 = go.Figure()
-        fig1.add_trace(go.Scatter(x=x, y=y1, mode="lines+markers", name="Opened"))
-        fig1.add_trace(go.Scatter(x=x, y=y2, mode="lines+markers", name="Closed"))
-        fig1.update_layout(title="Number of Issues Opened and Closed Over Time", xaxis_title="Date", yaxis_title="Number of Issues")
+        if issue["assignee"] is None:
+            assignees["Unassigned"] = assignees.get("Unassigned", 0) + 1
+        else:
+            name = issue["assignee"]["login"]
+            assignees[name] = assignees.get(name, 0) + 1
 
-        labels = []
-        for issue in data:
-            for label in issue["labels"]:
-                labels.append(label["name"])
+    x = list(counts_opened.keys())
+    y1 = list(counts_opened.values())
+    y2 = list(counts_closed.values())
 
-        fig2 = px.histogram(labels, nbins=len(set(labels)), title="Distribution of Issues by Label")
-        fig2.update_xaxes(title="Label")
-        fig2.update_yaxes(title="Number of Issues")
+    fig1 = go.Figure()
+    fig1.add_trace(go.Scatter(x=x, y=y1, mode="lines+markers", name="Opened"))
+    fig1.add_trace(go.Scatter(x=x, y=y2, mode="lines+markers", name="Closed"))
+    fig1.update_layout(title="Number of Issues Opened and Closed Over Time", xaxis_title="Date", yaxis_title="Number of Issues")
 
-        assignees = {}
-        for issue in data:
-            if issue["assignee"] is None:
-                if "Unassigned" not in assignees:
-                    assignees["Unassigned"] = 1
-                else:
-                    assignees["Unassigned"] += 1
-            else:
-                name = issue["assignee"]["login"]
-                if name not in assignees:
-                    assignees[name] = 1
-                else:
-                    assignees[name] += 1
+    fig2 = px.histogram(labels, nbins=len(set(labels)), title="Distribution of Issues by Label")
+    fig2.update_xaxes(title="Label")
+    fig2.update_yaxes(title="Number of Issues")
 
-        fig3 = px.pie(values=list(assignees.values()), names=list(assignees.keys()), title="Percentage of Issues by Assignee")
+    fig3 = px.pie(values=list(assignees.values()), names=list(assignees.keys()), title="Percentage of Issues by Assignee")
 
-        fig1.show()
-        fig2.show()
-        fig3.show()
+    fig1.show()
+    fig2.show()
+    fig3.show()
 
 def complex_plot_pulls():
     url = "https://api.github.com/repos/ton-society/ton-footsteps/pulls"
