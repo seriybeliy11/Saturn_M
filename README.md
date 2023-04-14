@@ -27,3 +27,15 @@ The GitHub Access Token is a unique code used to authorize access to your reposi
 - Copy the generated token to a safe place. Please note that after closing the window, the token will no longer appear.
 
 You can now use your Access Token to authorize access to repositories and other GitHub resources. To use it, add it as a value for the "access_token" parameter in your GitHub API requests.
+
+# Security (access data)
+To set the access_token, owner, and repo variables as environment variables, you can use the os module in Python.
+Here's an example:
+
+- Create a new file called .env in the root directory of your project.
+- Add the following lines to the .env file:
+```
+export access_token='your-token'
+export owner='delovoyhomie'
+export repo='ton-footsteps'
+```
