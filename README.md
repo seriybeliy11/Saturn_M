@@ -56,3 +56,38 @@ Here we have used the Python library "os" to access environment variables. The f
 ## For what?
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
 ## Tutorial 
+### Functions for getting data
+Run get_contributors(), get_issues(), get_pulls(), and average_time_isseu() to get the information you need. For example:
+```
+get_contributors()
+get_issues()
+get_pulls()
+average_time_isseu()
+```
+
+After you run the features, you'll get information about your repository, such as the number of participants, the number of issues and change requests, and the average time to resolve issues. Interpret the results to understand the community's contribution to the project and the effectiveness of working on problems.
+
+### Info 
+#### get_contributors()
+Get's information about contributors to the project on GitHub and displays statistics about the number of regular and active contributors, as well as the total number of commits from community members.
+
+#### get_issues()
+Get's information about all tasks (issues) of the project on GitHub and displays statistics about the number of open and closed tasks.
+
+
+#### get_pulls()
+Get's information about all pull requests of the project on GitHub and displays statistics about the number of pull requests.
+
+#### average_time_isseu()
+Get's information about the solution time of project tasks on GitHub and outputs the average solution time in days.
+
+### Plotting data
+The plot_contributors() function uses the GitHub API to retrieve data on contributors to the repository, specifically their total number of commits. It then plots this data in a bar graph using the plotly library.
+
+The plot_issues() function retrieves data on all issues in the repository, both open and closed, and plots this data in several different graphs using the plotly and pandas libraries. The graphs include a pie chart comparing the number of open and closed issues, a histogram showing the distribution of days for open issues, a histogram showing the distribution of days it took to close issues, and two line graphs showing the number of open and closed issues over time.
+
+The plot_pulls() function is similar to plot_issues(), but retrieves data on pull requests instead. It plots a pie chart comparing the number of open and closed pull requests using the plotly library.
+
+The issues_x_pulls() function retrieves data on both issues and pull requests and plots this data in a bar graph using the plotly library.
+
+The viz_contributors() function retrieves data on the weekly contributions of each contributor to the repository and plots this data in a line graph using the plotly library.
