@@ -67,7 +67,7 @@ average_time_isseu()
 
 After you run the features, you'll get information about your repository, such as the number of participants, the number of issues and change requests, and the average time to resolve issues. Interpret the results to understand the community's contribution to the project and the effectiveness of working on problems.
 
-## Info 
+## 📡Info 
 #### get_contributors()
 Get's information about contributors to the project on GitHub and displays statistics about the number of regular and active contributors, as well as the total number of commits from community members.
 
@@ -80,7 +80,7 @@ Get's information about all pull requests of the project on GitHub and displays 
 #### average_time_isseu()
 Get's information about the solution time of project tasks on GitHub and outputs the average solution time in days.
 
-## Plotting data
+## 🖨Plotting data
 #### The plot_contributors() 
 Function uses the GitHub API to retrieve data on contributors to the repository, specifically their total number of commits. It then plots this data in a bar graph using the plotly library.
 
@@ -96,7 +96,7 @@ Function retrieves data on both issues and pull requests and plots this data in 
 #### The viz_contributors() 
 Function retrieves data on the weekly contributions of each contributor to the repository and plots this data in a line graph using the plotly library.
 
-## Complex plotting data 
+## 🖨Complex plotting data 
 The **complex_plot_contributors()** function creates a plot that displays statistics on contributors to a GitHub repository. The plot includes three subplots:
 - A scatter plot showing the total number of commits vs. the total number of changes for each contributor, with the size of each marker indicating the total number of additions made by that contributor.
 - A line plot showing the total number of commits for each contributor.
@@ -112,7 +112,7 @@ The **complex_plot_pulls()** function creates a plot that displays statistics on
 - A pie chart showing the percentage of pull requests by author.
 
 ## DST functions
-### Getting data
+### 💾Getting data
 #### dst_get_contributors(start_date, end_date)
 The function dst_get_contributors retrieves information about the number of active contributors, the number of their contributions and the number of active initiatives on the TON Footsteps project during a given period of time.
 
@@ -161,7 +161,7 @@ Function parameters: none.
 How to use the function:
 ```dst_average_time_issue()```
 
-### DST Plot
+### 🖨DST Plot
 The function **dst_plot_contributors** uses the GitHub API to get data about the number of commits made by each contributor over a specified period of time and builds a bar chart with this information.
 
 The **dst_plot_issues** function uses the GitHub API to get a list of issues opened and closed over a specified period of time and builds a pie chart showing the ratio of open and closed issues.
@@ -177,7 +177,7 @@ dst_plot_contributors(start_date, end_date)
 dst_plot_issues(start_date, end_date)
 dst_plot_pulls(start_date, end_date)
 ```
-### DST complex plot
+### 🖨DST complex plot
 The first function, **complex_dst_plot_pulls**, retrieves pull request data for the given date range and creates three visualizations: a bar chart of the number of pull requests by author, a pie chart of the status of the pull requests, and a bar chart of the number of pull requests made by each user.
 
 The second function, **complex_dst_plot_issues**, retrieves issue data for the given date range and creates three visualizations: a bar chart of the number of issues by author, a pie chart of the status of the issues, and a bar chart of the number of issues made by each user.
