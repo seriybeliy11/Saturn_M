@@ -56,7 +56,7 @@ Here we have used the Python library "os" to access environment variables. The f
 ## For what?
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
 ## Tutorial 
-### Functions for getting data
+### 💾Functions for getting data
 Run get_contributors(), get_issues(), get_pulls(), and average_time_isseu() to get the information you need. For example:
 ```
 get_contributors()
@@ -67,7 +67,7 @@ average_time_isseu()
 
 After you run the features, you'll get information about your repository, such as the number of participants, the number of issues and change requests, and the average time to resolve issues. Interpret the results to understand the community's contribution to the project and the effectiveness of working on problems.
 
-## 📡Info 
+## 💾Info 
 #### get_contributors()
 Get's information about contributors to the project on GitHub and displays statistics about the number of regular and active contributors, as well as the total number of commits from community members.
 
@@ -183,3 +183,16 @@ The first function, **complex_dst_plot_pulls**, retrieves pull request data for 
 The second function, **complex_dst_plot_issues**, retrieves issue data for the given date range and creates three visualizations: a bar chart of the number of issues by author, a pie chart of the status of the issues, and a bar chart of the number of issues made by each user.
 
 The third function, **complex_dst_plot_contributors**, retrieves contributor data for the given date range and creates three visualizations: a bar chart of the number of commits by contributor, a bar chart of the number of lines added by contributor, and a bar chart of the number of lines deleted by contributor.
+
+To call the functions complex_dst_plot_pulls, complex_dst_plot_issues and complex_dst_plot_contributors, you need to pass the start and end dates of the period for which you want to receive data. For example, if you want to get data from January 1, 2023 to January 31, 2023, you can call the functions as follows:
+```
+start_date = "2023-01-01"
+end_date = "2023-01-31"
+
+complex_dst_plot_pulls(start_date, end_date)
+complex_dst_plot_issues(start_date, end_date)
+complex_dst_plot_contributors(start_date, end_date)
+```
+
+🚀Now that you've mastered all the basics, your preparation for your trip to space is complete. Have a safe trip! 
+
