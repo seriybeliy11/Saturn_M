@@ -2,7 +2,7 @@
 # 🚀Saturn_FM
 Exploring and Optimizing Your GitHub Community
 
-# 🛸Beggining
+# 🛸Beginning
 First, install all the dependencies from the file ***requirements.txt***:
 
 ```pip install -t requirements.txt```
