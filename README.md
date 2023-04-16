@@ -65,7 +65,7 @@ from plate import repo
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
 ## Tutorial 
 ### 💾Functions for getting data
-Run get_contributors(), get_issues(), get_pulls(), and average_time_isseu() to get the information you need. For example:
+Run ***get_contributors(), get_issues(), get_pulls(), and average_time_isseu()*** to get the information you need. For example:
 ```
 get_contributors()
 get_issues()
@@ -192,7 +192,7 @@ The second function, **complex_dst_plot_issues**, retrieves issue data for the g
 
 The third function, **complex_dst_plot_contributors**, retrieves contributor data for the given date range and creates three visualizations: a bar chart of the number of commits by contributor, a bar chart of the number of lines added by contributor, and a bar chart of the number of lines deleted by contributor.
 
-To call the functions complex_dst_plot_pulls, complex_dst_plot_issues and complex_dst_plot_contributors, you need to pass the start and end dates of the period for which you want to receive data. For example, if you want to get data from January 1, 2023 to January 31, 2023, you can call the functions as follows:
+To call the functions ***complex_dst_plot_pulls, complex_dst_plot_issues and complex_dst_plot_contributors***, you need to pass the start and end dates of the period for which you want to receive data. For example, if you want to get data from January 1, 2023 to January 31, 2023, you can call the functions as follows:
 ```
 start_date = "2023-01-01"
 end_date = "2023-01-31"
