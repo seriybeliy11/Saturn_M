@@ -52,6 +52,14 @@ repo = os.environ['repo']
 
 Here we have used the Python library "os" to access environment variables. The function "os.environ['variable_name']" is used to get the value of the variable.
 
+If you don't need this protection, just add the token from the plate.py file and import this 
+```
+from plate import access_token
+from plate import owner 
+from plate import repo
+```
+
+
 # 🎓How to use it?
 ## For what?
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
