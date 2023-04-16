@@ -1,8 +1,5 @@
 import requests
 import json
-from plate import repo
-from plate import access_token
-from plate import owner
 import matplotlib.pyplot as plt
 import csv
 from datetime import datetime
