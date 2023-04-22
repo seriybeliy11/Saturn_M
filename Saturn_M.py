@@ -554,3 +554,99 @@ def contributors_bubbles():
     )
     fig = go.Figure(data=[trace], layout=layout)
     fig.show()
+
+def get_AVG():
+    try:
+        org = 'ton-society'
+        repo = 'ton-footsteps'
+
+
+        url = f'https://api.github.com/repos/{org}/{repo}/community/profile'
+        headers = {'Authorization': f'token {access_token}'}
+
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()
+            avg = data['health_percentage']
+
+            print(f'AVG for {org}/{repo}: {avg}')
+        else:
+            print(f'Request failed with status code {response.status_code}')
+    except:
+        print('Something wrong...')
+
+def get_KPI_pulls():
+    try:
+        owner = 'ton-society'
+        repo = 'ton-footsteps'
+
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/issues?state=open')
+        open_issues = response.json()
+        open_issues_count = len(open_issues)
+
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/issues?state=closed&since=30d')
+        closed_issues = response.json()
+        closed_issues_count = len(closed_issues)
+
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/pulls?state=open')
+        open_pulls = response.json()
+        open_pulls_count = len(open_pulls)
+
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/pulls?state=closed&since=30d')
+        closed_pulls = response.json()
+        closed_pulls_count = len(closed_pulls)
+
+        issues_kpi = closed_issues_count / (open_issues_count + closed_issues_count)
+        pulls_kpi = closed_pulls_count / (open_pulls_count + closed_pulls_count)
+
+        print(f'KPI для pulls: {pulls_kpi}')
+    except:
+        print('Something wrong...')
+
+def get_KPI_contribute():
+    try:
+        owner = 'delovoyhomie'
+        repo = 'ton-footsteps'
+
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}')
+        repo_info = response.json()
+        commit_count = repo_info['size']
+
+        print(f"KPI for the whole period of time: {commit_count}")
+    except:
+        print('Something wrong...')
+
+def export_CSV_contribute():
+    try:
+        owner = 'ton-society'
+        repo = 'ton-footsteps'
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/contributors')
+        contributors = response.json()
+        df = pd.json_normalize(contributors)
+        df.to_csv('data_conributors.csv', index=False)
+    except:
+        print('Something wrong...')
+
+def export_CSV_pulls():
+    try:
+        owner = 'ton-society'
+        repo = 'ton-footsteps'
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/pulls')
+        contributors = response.json()
+        df = pd.json_normalize(contributors)
+        df.to_csv('data_pulls.csv', index=False)
+    except:
+        print('Something wrong...')
+
+def export_CSV_issues():
+    try:
+        owner = 'ton-society'
+        repo = 'ton-footsteps'
+        response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/contributors')
+        contributors = response.json()
+        df = pd.json_normalize(contributors)
+        df = df['contributions']
+        df.to_csv('data_conributors.csv', index=False)
+    except:
+        print('Something wrong...')

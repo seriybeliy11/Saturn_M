@@ -101,9 +101,6 @@ def dst_get_issues():
     except:
         print('Something wrong...')
 
-
-import datetime
-
 def dst_get_pulls():
     try:
         start_year = int(input("Enter the start year (e.g. 2022): "))
@@ -186,12 +183,12 @@ def dst_average_time_issue():
 
 def dst_plot_contributors():
     try:
-        start_year = int(input("Введите год начала периода (например, 2022): "))
-        start_month = int(input("Введите месяц начала периода (например, 1 для января): "))
-        start_day = int(input("Введите день начала периода (например, 1): "))
-        end_year = int(input("Введите год конца периода (например, 2022): "))
-        end_month = int(input("Введите месяц конца периода (например, 12 для декабря): "))
-        end_day = int(input("Введите день конца периода (например, 31): "))
+        start_year = int(input("Enter the start year (e.g. 2022): "))
+        start_month = int(input("Enter the start month (e.g. 1 for January): "))
+        start_day = int(input("Enter the start day (e.g. 1): "))
+        end_year = int(input("Enter the end year (e.g. 2022): "))
+        end_month = int(input("Enter the end month (e.g. 12 for December): "))
+        end_day = int(input("Enter the end day (e.g. 31): "))
 
         start_date = datetime.date(start_year, start_month, start_day).isoformat()
         end_date = datetime.date(end_year, end_month, end_day).isoformat()
