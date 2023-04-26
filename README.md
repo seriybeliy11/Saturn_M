@@ -9,7 +9,6 @@ First, install all the dependencies from the file ***requirements.txt***:
 
 ## Access token for parsing
 How to get a GitHub Access Token
-
 The GitHub Access Token is a unique code used to authorize access to your repositories and other GitHub resources. It can be obtained in a few simple steps.
 
 ### Step 1: Go to your GitHub profile settings
