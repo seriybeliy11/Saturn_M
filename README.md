@@ -2,25 +2,25 @@
 # 🚀Saturn_FM
 Exploring and Optimizing Your GitHub Community
 
-# 🛸Beginning
+# Ready to start
 First, install all the dependencies from the file ***requirements.txt***:
 
 ```pip install -t requirements.txt```
 
-# Access token for parsing
+## Access token for parsing
 How to get a GitHub Access Token
 
 The GitHub Access Token is a unique code used to authorize access to your repositories and other GitHub resources. It can be obtained in a few simple steps.
 
-## Step 1: Go to your GitHub profile settings
+### Step 1: Go to your GitHub profile settings
 1. Go to the GitHub site and log in to your account.
 2. Click on your avatar in the top right corner of the screen and select Settings.
 
-## Step 2: Choose settings to get an Access Token
+### Step 2: Choose settings to get an Access Token
 1. On the settings page, select the "Developer settings" tab.
 2. On the menu that appears, select "Personal access tokens.
 
-## Step 3: Create a new token
+### Step 3: Create a new token
 1. Click on the "Generate new token" button.
 2. Select the necessary permissions for the token (read, write, delete, etc.).
 3. Click on the "Generate token" button.
