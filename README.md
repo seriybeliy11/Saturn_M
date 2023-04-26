@@ -1,5 +1,5 @@
 ![goodbye-saturn-l5-1336x768](https://user-images.githubusercontent.com/129196368/231134541-9e2e90d0-a660-4438-8ca8-40c06a966df5.jpg)
-# 🚀Saturn_FM
+# 🚀SaturiC
 Exploring and Optimizing Your GitHub Community
 
 # Ready to start
@@ -63,7 +63,7 @@ from plate import repo
 ## For what?
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
 ## Tutorial 
-To get started, start the program and select one of 17 options. You can choose to show information about contributors, problems, or pool-requests, as well as get various statistical graphs and KPIs.
+To get started, start the program and select one of 17 options. You can choose to show information about contributors, problems, or pool-requests, as well as get various statistical graphs and KPIs. Run main.py for first
 
 ### Points
 If you want to get the average time to solve problems, select option 4. If you want a visualization of the contributions, problems, or pool-requests statistics, select the appropriate option from 5 to 8.
