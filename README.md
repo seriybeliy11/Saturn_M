@@ -5,7 +5,7 @@ Exploring and Optimizing Your GitHub Community
 # Ready to start
 First, install all the dependencies from the file ***requirements.txt***:
 
-```pip install -t requirements.txt```
+```pip install -r requirements.txt```
 
 ## Access token for parsing
 How to get a GitHub Access Token
