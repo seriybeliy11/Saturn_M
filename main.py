@@ -78,9 +78,10 @@ def main():
             export_CSV_pulls()
 
         elif choice == '17':
-            export_CSV_issues()
+            export_CSV_pulls()
 
         elif choice == '18':
+            export_CSV_issues()
 
         elif choice == 'q':
             print('Exiting program.')
