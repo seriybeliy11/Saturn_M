@@ -23,6 +23,8 @@ def main():
         print('16 - Export CSV about contributors')
         print('17 - Export CSV about pulls')
         print('18 - Export CSV about issues')
+        print('19 - Show info issues (TimeLine)')
+        print('20 - Show info issues (TimeLine)')
         print('Choose an option (or q to quit):')
         print('----------------------------------------------------------------')
         print('- - -  --   ---    ---      --  -- - ------- ---- ---  --- -----')
@@ -82,6 +84,12 @@ def main():
 
         elif choice == '18':
             export_CSV_issues()
+
+        elif choice == '19':
+            dst_get_issues()
+
+        elif choice == '20':
+            dst_get_pulls()
 
         elif choice == 'q':
             print('Exiting program.')
