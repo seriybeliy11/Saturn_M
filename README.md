@@ -98,8 +98,8 @@ Once you have selected your option, you will see the corresponding results in th
 - Export CSV about pulls: exports information about all merge requests in CSV format.
 - Export CSV about issues: exports information about all problems in the project in CSV format
 
-## DST options
-### Caution - working with dates in unstable mode (due to API load)
+## ⌚DST options
+### ⚠️Caution - working with dates in unstable mode (due to API load)
 - Show info issues (TimeLine)
 - Show info pulls (TimeLine)
 - Show info contributors (TimeLine)
@@ -108,3 +108,10 @@ Once you have selected your option, you will see the corresponding results in th
 - Visual for pulls statistics (TimeLine)
 - Complex plot pulls (TimeLine)
 - Complex plot contributors (TimeLine)
+
+## Add-ons
+- Number of commenters for issues (unique) - all unique commenters
+- Time to get Footstep approved or declined - all issues
+- Get Label(s) for issuec - just enter the number
+
+## Please note that some features may not run the first time, be gentle and try again
