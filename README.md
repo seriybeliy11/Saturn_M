@@ -97,3 +97,14 @@ Once you have selected your option, you will see the corresponding results in th
 - Export CSV about contributors": exports information about all project participants in CSV format.
 - Export CSV about pulls: exports information about all merge requests in CSV format.
 - Export CSV about issues: exports information about all problems in the project in CSV format
+
+## DST options
+### Caution - working with dates in unstable mode (due to API load)
+- Show info issues (TimeLine)
+- Show info pulls (TimeLine)
+- Show info contributors (TimeLine)
+- Visual for contribution statistics (TimeLine)
+- Visual for issues statistics (TimeLine)
+- Visual for pulls statistics (TimeLine)
+- Complex plot pulls (TimeLine)
+- Complex plot contributors (TimeLine)
