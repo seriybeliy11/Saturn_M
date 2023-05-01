@@ -13,6 +13,7 @@ from openpyxl import Workbook
 import plotly.express as px
 from plotly.subplots import make_subplots
 import numpy as np
+import time
 
 
 def dst_get_contributors():
@@ -1050,5 +1051,86 @@ def export_CSV_issues():
         df = pd.json_normalize(contributors)
         df = df['contributions']
         df.to_csv('data_conributors.csv', index=False)
+    except:
+        print('Something wrong...')
+
+def get_commenters():
+    try:
+        url = 'https://api.github.com/repos/ton-society/ton-footsteps/issues/comments'
+        headers = {"Authorization": f"Bearer {access_token}"}
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            comments = response.json()
+            commenters = set()
+            for comment in comments:
+                commenters.add(comment['user']['login'])
+            num_commenters = len(commenters)
+            print('Number of commenters:', num_commenters)
+        else:
+            print('Failed to retrieve comments:', response.status_code)
+
+    except:
+        print('Something wrong...')
+
+def get_time_ad():
+    try:
+        url = f"https://api.github.com/repos/ton-society/{repo}/issues"
+        headers = {"Authorization": f"Bearer {access_token}"}
+        params = {"per_page": 30, "state": "all"}
+        issues = []
+
+        while True:
+            response = requests.get(url, headers=headers, params=params)
+
+            if response.status_code == 200:
+                issues += response.json()
+                if 'next' in response.links.keys():
+                    url = response.links['next']['url']
+                else:
+                    break
+            else:
+                print(f'Failed to retrieve issues: {response.status_code}')
+                break
+
+        for issue in issues:
+            created_at = datetime.strptime(issue['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+            if issue['closed_at']:
+                closed_at = datetime.strptime(issue['closed_at'], '%Y-%m-%dT%H:%M:%SZ')
+                time_to_close = closed_at - created_at
+                print(f"Issue #{issue['number']} opened at {created_at} and closed at {closed_at}. Time to close: {time_to_close}")
+            else:
+                print(f"Issue #{issue['number']} opened at {created_at} and is still open.")
+            time.sleep(0.5)
+
+
+    except:
+        print('Something wrong...')
+
+def get_labels():
+    try:
+        print('Number for issue:')
+        number = input()
+        url = f"https://api.github.com/repos/ton-society/ton-footsteps/issues/{number}/labels"
+        headers = {"Authorization": f"Bearer {access_token}"}
+        params = {"per_page": 30, "state": "all"}
+        issues = []
+
+        while True:
+            response = requests.get(url, headers=headers, params=params)
+
+            if response.status_code == 200:
+                issues += response.json()
+                if 'next' in response.links.keys():
+                    url = response.links['next']['url']
+                else:
+                    break
+            else:
+                print(f'Failed to retrieve issues: {response.status_code}')
+                break
+
+        for j in issues:
+            print(f"Issue #{number} have label(s): {j['name']}")
+
     except:
         print('Something wrong...')

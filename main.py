@@ -19,13 +19,25 @@ def main():
         print('12 - Trends Line')
         print('13 - Get AVG parameter')
         print('14 - Get KPI parameter (pulls)')
-        print('15 - Get KPI parameter (contribute)')
-        print('16 - Export CSV about contributors')
-        print('17 - Export CSV about pulls')
-        print('18 - Export CSV about issues')
-        print('19 - Show info issues (TimeLine)')
-        print('20 - Show info issues (TimeLine)')
+        print('15 - Export CSV about contributors')
+        print('16 - Export CSV about pulls')
+        print('17 - Export CSV about issues')
+        print('18 - Show info issues (TimeLine)')
+        print('19 - Show info pulls (TimeLine)')
+        print('20 - Show info contributors (TimeLine)')
+        print('21 - Visual for contribution statistics (TimeLine)')
+        print('22 - Visual for issues statistics (TimeLine)')
+        print('23 - Visual for pulls statistics (TimeLine)')
+        print('24 - Complex plot pulls (TimeLine)')
+        print('25 - Complex plot contributors (TimeLine)')
+        print('26 - Number of commenters for issue')
+        print('27 - Time to get Footstep approved or declined')
+        print('28 - Get Label for issue')
+
+
         print('Choose an option (or q to quit):')
+        print('----------------------------------------------------------------')
+        print('- - -  --   ---    ---      --  -- - ------- ---- ---  --- -----')
         print('----------------------------------------------------------------')
         print('- - -  --   ---    ---      --  -- - ------- ---- ---  --- -----')
 
@@ -65,13 +77,13 @@ def main():
             contributors_bubbles()
 
         elif choice == '12':
-            get_AVG()
+            critic_line()
 
         elif choice == '13':
-            get_KPI_pulls()
+            get_AVG()
 
         elif choice == '14':
-            get_KPI_contribute()
+            get_KPI_pulls()
 
         elif choice == '15':
             export_CSV_contribute()
@@ -80,16 +92,40 @@ def main():
             export_CSV_pulls()
 
         elif choice == '17':
-            export_CSV_pulls()
-
-        elif choice == '18':
             export_CSV_issues()
 
-        elif choice == '19':
+        elif choice == '18':
             dst_get_issues()
 
-        elif choice == '20':
+        elif choice == '19':
             dst_get_pulls()
+
+        elif choice == '20':
+            dst_get_contributors()
+
+        elif choice == '21':
+            dst_plot_pulls()
+
+        elif choice == '22':
+            dst_plot_issues()
+
+        elif choice == '23':
+            dst_get_pulls()
+
+        elif choice == '24':
+            complex_dst_plot_pulls()
+
+        elif choice == '25':
+            complex_dst_plot_contributors()
+
+        elif choice == '26':
+            get_commenters()
+
+        elif choice == '27':
+            get_time_ad()
+
+        elif choice == '28':
+            get_labels()
 
         elif choice == 'q':
             print('Exiting program.')
