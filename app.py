@@ -88,7 +88,6 @@ app.layout = html.Div(children=[
     [Input('contrib-graph', 'clickData'), Input('date-slider', 'value')])
 
 def update_graph(clickData, date_range):
-    # Update contributors graph if a data point is clicked
     if clickData:
         login = clickData['points'][0]['x']
         dff = data_contributors[data_contributors.login == login]
@@ -99,8 +98,6 @@ def update_graph(clickData, date_range):
         fig_contrib = px.bar(data_contributors, x='login', y='contributions', labels={'login': 'Contributor', 'contributions': 'Contributions'})
         fig_contrib.update_layout(title='Contributions by Contributor', xaxis_title='Contributor', yaxis_title='Contributions', plot_bgcolor='#fff', paper_bgcolor='#fff', font=dict(size=12, color='#333'), colorway=px.colors.sequential.RdBu)
 
-
-    # Update issues-state graph
     fig_issues_state = px.pie(data_issues, names='state', hole=.0, labels={'state': 'State'}, color_discrete_sequence=px.colors.sequential.RdBu)
     fig_issues_state.update_traces(marker=dict(colors=['#EF553B', '#00CC96']))
     fig_issues_state.update_layout(title='Issues by State')
