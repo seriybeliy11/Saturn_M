@@ -40,27 +40,26 @@ fig_duration = px.bar(data_issues_sorted, x='number', y='duration', labels={'num
 fig_duration.update_layout(title='Time to get Footstep approved or declined')
 
 app.layout = html.Div(children=[
-    html.H1(children='SaturiC - Ton-Footsteps', style={'textAlign':'center'}),
+    html.H1(children='SaturiC - Ton-Footsteps', style={'textAlign': 'center'}),
 
     html.Div([
         html.Div([
-            html.H2(children='Contribution chart', style={'textAlign':'center'}),
-            dcc.Graph(id='contrib-graph', style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
+            dcc.Graph(id='contrib-graph', style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
+            html.P('Contribution chart', style={'textAlign': 'center'})
         ], className='six columns'),
 
         html.Div([
-            html.H2(children='Issues state chart', style={'textAlign':'center'}),
-            dcc.Graph(id='issues-state-graph', style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
+            dcc.Graph(id='issues-state-graph', style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
+            html.P('Issues state chart', style={'textAlign': 'center'})
         ], className='six columns')
     ], className='row'),
 
     html.Div([
-        html.H2(children='Distribution of project durations', style={'textAlign':'center'}),
-        dcc.Graph(id='duration-graph', figure=fig_duration, style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
+        dcc.Graph(id='duration-graph', figure=fig_duration, style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
+        html.P('Distribution of project durations', style={'textAlign': 'center'})
     ]),
 
     html.Div([
-        html.H2(children='Distribution of Ton-Footsteps', style={'textAlign':'center'}),
         dcc.Graph(id='histogram', style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
         dcc.RangeSlider(
             id='date-slider',
@@ -69,16 +68,16 @@ app.layout = html.Div(children=[
             step=86400,
             value=[data['date'].min().timestamp(), data['date'].max().timestamp()],
             marks={int(date.timestamp()): {'label': date.strftime('%d.%m.%Y'), 'style': {'font-size': '5px'}} for date in data['date'].unique()}
-        )
+        ),
+        html.P('Distribution of Ton-Footsteps', style={'textAlign': 'center'})
     ]),
 
     html.Div([
-        html.Div([
-            html.H2(children='Proportion of labels assigned', style={'textAlign':'center'}),
-            dcc.Graph(id='labels-pie', figure=fig_p, style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
-        ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
-    ])
+        dcc.Graph(id='labels-pie', figure=fig_p, style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'}),
+        html.P('Proportion of labels assigned', style={'textAlign': 'center'})
+    ], style={'display': 'flex', 'justify-content': 'center', 'align-items': 'center'})
 ])
+
 
 
 
@@ -88,6 +87,7 @@ app.layout = html.Div(children=[
     [Input('contrib-graph', 'clickData'), Input('date-slider', 'value')])
 
 def update_graph(clickData, date_range):
+    # Update contributors graph if a data point is clicked
     if clickData:
         login = clickData['points'][0]['x']
         dff = data_contributors[data_contributors.login == login]
@@ -98,6 +98,8 @@ def update_graph(clickData, date_range):
         fig_contrib = px.bar(data_contributors, x='login', y='contributions', labels={'login': 'Contributor', 'contributions': 'Contributions'})
         fig_contrib.update_layout(title='Contributions by Contributor', xaxis_title='Contributor', yaxis_title='Contributions', plot_bgcolor='#fff', paper_bgcolor='#fff', font=dict(size=12, color='#333'), colorway=px.colors.sequential.RdBu)
 
+
+    # Update issues-state graph
     fig_issues_state = px.pie(data_issues, names='state', hole=.0, labels={'state': 'State'}, color_discrete_sequence=px.colors.sequential.RdBu)
     fig_issues_state.update_traces(marker=dict(colors=['#EF553B', '#00CC96']))
     fig_issues_state.update_layout(title='Issues by State')
