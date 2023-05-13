@@ -6,3 +6,4 @@ pandas
 plotly
 openpyxl
 numpy==1.24.3
+dash
