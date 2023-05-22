@@ -1,6 +1,6 @@
 ![image](https://github.com/seriybeliy11/Saturn_M/assets/129196368/90d3f258-056e-472f-8b95-1af917434de7)
 
-# 🚀SATURN MODULE: SIMPLE METRIC'S & VIZUAIL
+# 🚀SATURN MODULE: SIMPLE METRIC'S
 Exploring and Optimizing Your GitHub Community
 
 # Ready to start
