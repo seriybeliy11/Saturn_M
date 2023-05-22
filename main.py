@@ -5,18 +5,14 @@ import webbrowser
 
 def main():
     while True:
+        time.sleep(7)
         print('----------_--- -- - -- - -- -      - - - - - -- ---- -- -- -  -')
         print('- - -  --   ---    ---      --  -- - ------- ---- ---  --- ----')
         print('Hello! You are using the SaturiC Analyze System')
-
-
-        print('Choose an option (or q to quit):')
         print('----------------------------------------------------------------')
         print('- - -  --   ---    ---      --  -- - ------- ---- ---  --- -----')
         print('----------------------------------------------------------------')
         print('- - -  --   ---    ---      --  -- - ------- ---- ---  --- -----')
-
-        choice = str(input())
         get_contributors()
         print('About issues:')
         get_issues()
