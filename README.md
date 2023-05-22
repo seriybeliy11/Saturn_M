@@ -1,5 +1,6 @@
-![goodbye-saturn-l5-1336x768](https://user-images.githubusercontent.com/129196368/231134541-9e2e90d0-a660-4438-8ca8-40c06a966df5.jpg)
-# 🚀SaturiC
+![image](https://github.com/seriybeliy11/Saturn_M/assets/129196368/90d3f258-056e-472f-8b95-1af917434de7)
+
+# 🚀SATURN MODULE: SIMPLE METRIC'S & VIZUAIL
 Exploring and Optimizing Your GitHub Community
 
 # Ready to start
@@ -62,56 +63,9 @@ from plate import repo
 # 🎓How to use it?
 ## For what?
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
-## Tutorial 
-To get started, start the program and select one of 17 options. You can choose to show information about contributors, problems, or pool-requests, as well as get various statistical graphs and KPIs. Run main.py for first
-
-### Points
-If you want to get the average time to solve problems, select option 4. If you want a visualization of the contributions, problems, or pool-requests statistics, select the appropriate option from 5 to 8.
-
-You can also get a visualization of your counterparty statistics as a chart or heatmap by selecting one of options 9 to 11. If you need KPIs, select one of options 13 or 14.
-
-To export data to a CSV file, choose one of options 15, 16 or 17. If you need more information, select option 18.
-
-Once you have selected your option, you will see the corresponding results in the console. If you want to exit the program, enter the letter "q".
-
-#### Extension
-## Get data
-- Show info contributors": displays information about the number of community contributors.
-- Show info issues: displays information about the number of open and closed issues.
-- Show info pulls": displays information about the number of pull requests. 
-- Show average_time for issues": calculates the average time taken to solve an issue and displays it.
-- Get AVG parameter": calculates the average value of the parameter for all project participants.
-- Get KPI parameter (pulls)": calculates the key performance indicator (KPI) for merge requests.
-- Get KPI parameter (contributions): calculates the key performance indicator (KPI) for contributions.
-
-## Get visual
-- Visual for contribution statistics": displays a graph that shows the number of contributions made by each project participant.
-- Visual for issues statistics: displays a graph showing the number of problems in the project.
-- Visual for pulls statistics": displays a graph showing the number of merge requests in the project.
-- Visual relation issues/pulls": displays a chart showing the ratio of problems to merge requests in the project.
-- Visual bar charts for contribution": displays a bar chart showing the number of contributions from each project member.
-- Visual with Heatmap for contribution": displays a heatmap showing the number of contributions of each project participant on each day.
-- Visual with Bubbles for contribution": displays a bubble chart showing the number of contributions of each project participant.
-
-## Export
-- Export CSV about contributors": exports information about all project participants in CSV format.
-- Export CSV about pulls: exports information about all merge requests in CSV format.
-- Export CSV about issues: exports information about all problems in the project in CSV format
-
-## ⌚DST options
-### ⚠️Caution - working with dates in unstable mode (due to API load)
-- Show info issues (TimeLine)
-- Show info pulls (TimeLine)
-- Show info contributors (TimeLine)
-- Visual for contribution statistics (TimeLine)
-- Visual for issues statistics (TimeLine)
-- Visual for pulls statistics (TimeLine)
-- Complex plot pulls (TimeLine)
-- Complex plot contributors (TimeLine)
-
-## Add-ons
-- Number of commenters for issues (unique) - all unique commenters
-- Time to get Footstep approved or declined - all issues
-- Get Label(s) for issuec - just enter the number
+# Tutorial 
+1. To get started, run the csv_g.py file, the script will collect metrics for visualization - `python csv_g.py`
+2. Run the main.py file, enjoy the process - `python main.py`
+3. When you see a Flask server running, navigate to the suggested address on localhost. Immerse yourself in the space world of beautiful numbers
 
 ## Please note that some features may not run the first time, be gentle and try again
