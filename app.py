@@ -102,7 +102,6 @@ def update_graph(clickData, date_range):
         fig_contrib = px.bar(data_contributors, x='login', y='contributions', labels={'login': 'Contributor', 'contributions': 'Contributions'})
         fig_contrib.update_layout(xaxis_title='Contributor', yaxis_title='Contributions')
 
-    # Update issues-state graph
     fig_issues_state = px.pie(data_issues, names='state', hole=0.3, labels={'state': 'State'}, color_discrete_sequence=px.colors.sequential.RdBu)
     fig_issues_state.update_traces(textposition='inside', textinfo='percent+label')
     fig_issues_state.update_layout(title='Issues by State')
