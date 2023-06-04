@@ -1,9 +1,13 @@
-from SaturiC import *
 import subprocess
+subprocess.check_call(['pip', 'install', '-r', 'requirements.txt'])
+
+from SaturiC import *
 import webbrowser
 
 
 def main():
+    subprocess.run(['python', 'csv_g.py'])
+    subprocess.check_call(['pip', 'install', '-r', 'requirements.txt'])
     while True:
         time.sleep(7)
         print('----------_--- -- - -- - -- -      - - - - - -- ---- -- -- -  -')
