@@ -3,11 +3,6 @@
 # 🚀SATURN MODULE: SIMPLE METRIC'S
 Exploring and Optimizing Your GitHub Community
 
-# Ready to start
-First, install all the dependencies from the file ***requirements.txt***:
-
-```pip install -r requirements.txt```
-
 ## Access token for parsing
 How to get a GitHub Access Token
 The GitHub Access Token is a unique code used to authorize access to your repositories and other GitHub resources. It can be obtained in a few simple steps.
@@ -64,8 +59,7 @@ from plate import repo
 ## For what?
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
 # Tutorial 
-1. To get started, run the csv_g.py file, the script will collect metrics for visualization - `python csv_g.py`
-2. Run the main.py file, enjoy the process - `python main.py`
-3. When you see a Flask server running, navigate to the suggested address on localhost. Immerse yourself in the space world of beautiful numbers
+1. Run the main.py file, enjoy the process - `python main.py`
+2. When you see a Flask server running, navigate to the suggested address on localhost. Immerse yourself in the space world of beautiful numbers
 
 ## Please note that some features may not run the first time, be gentle and try again
