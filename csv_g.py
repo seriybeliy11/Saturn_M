@@ -7,6 +7,7 @@ import requests
 from datetime import *
 import csv
 import pandas as pd
+import time
 
 def main():
     url = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
@@ -53,20 +54,35 @@ def main():
     repo = 'ton-footsteps'
     url = f'https://api.github.com/repos/{owner}/{repo}/stats/contributors'
 
-    with requests.Session() as session:
-        response = session.get(url)
-        response.raise_for_status()
-        contributors = response.json()
+    while True:
+        with requests.Session() as session:
+            response = session.get(url)
+            response.raise_for_status()
+            contributors = response.json()
 
-    with open('contributors.csv', 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(['name', 'date', 'additions', 'deletions', 'commits'])
-        for contributor in contributors:
-            for week in contributor['weeks']:
-                if pd.isna(week['a']) or pd.isna(week['d']) or pd.isna(week['c']):
-                    continue
-                date = datetime.fromtimestamp(week['w']).strftime('%Y-%m-%d')
-                writer.writerow([contributor['author']['login'], date, week['a'], week['d'], week['c']])
+        if not contributors:
+            print("No contributors found for the specified repository. Retrying...")
+            time.sleep(5)  # Wait for 5 seconds before retrying
+            continue
+
+        with open('contributors.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['name', 'date', 'additions', 'deletions', 'commits'])
+            for contributor in contributors:
+                for week in contributor['weeks']:
+                    if pd.isna(week['a']) or pd.isna(week['d']) or pd.isna(week['c']):
+                        continue
+                    date = datetime.fromtimestamp(week['w']).strftime('%Y-%m-%d')
+                    writer.writerow([contributor['author']['login'], date, week['a'], week['d'], week['c']])
+
+        df = pd.read_csv('contributors.csv').dropna(subset=['date'])
+        df.to_csv('contributors.csv', index=False)
+        break  # Exit the loop if data is successfully retrieved
+
+    print("Contributors data successfully retrieved.")
+
+
+
 
 
     ############################################################################
