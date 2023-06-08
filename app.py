@@ -6,6 +6,7 @@ from dash import html
 from dash import dcc
 from dash.dependencies import Input, Output
 import webbrowser
+import subprocess
 
 # Configuration
 DATA_CONTRIBUTORS_FILE = 'data_contributors.csv'
@@ -148,5 +149,5 @@ def update_graph(clickData, date_range):
 
 
 if __name__ == '__main__':
+    subprocess.check_call(['python', 'dts.py'])
     app.run_server(debug=True)
-    webbrowser.open_new('http://localhost:8050/')
