@@ -7,6 +7,8 @@ Exploring and Optimizing Your GitHub Community
 How to get a GitHub Access Token
 The GitHub Access Token is a unique code used to authorize access to your repositories and other GitHub resources. It can be obtained in a few simple steps.
 
+# Tutorial 
+
 ### Step 1: Go to your GitHub profile settings
 1. Go to the GitHub site and log in to your account.
 2. Click on your avatar in the top right corner of the screen and select Settings.
@@ -21,7 +23,15 @@ The GitHub Access Token is a unique code used to authorize access to your reposi
 3. Click on the "Generate token" button.
 4. Copy the generated token to a safe place. Please note that after closing the window, the token will no longer appear.
 
-You can now use your Access Token to authorize access to repositories and other GitHub resources. To use it, add it as a value for the "access_token" parameter in your GitHub API requests.
+You can now use your Access Token to authorize access to repositories and other GitHub resources. Set the value of your token in the `access_token` variable of the `plate.py` file for your GitHub API requests.
+
+### Step 4: Launch requirements
+1. Run `pip install -r requirements.txt`
+2. Run the `main.py` file, enjoy the process - `python main.py`
+
+### Finish: Results
+First, a page will automatically launch with information about each user's contribution in accordance with the timeline below. Next when you see a Flask server running, navigate to the suggested address on localhost. Immerse yourself in the space world of beautiful numbers
+
 
 # ❄Security (access data)
 To set the access_token, owner, and repo variables as environment variables, you can use the os module in Python.
@@ -54,12 +64,9 @@ from plate import owner
 from plate import repo
 ```
 
-
 # 🎓How to use it?
 ## For what?
 Visualization and data collection can help you learn which community members contribute the most to the project. This can help project leaders determine who needs encouragement and who can help develop the project. Visualization and data collection can also help track project development, including the frequency and volume of code changes, the number of open and closed issues, growth in the number of participants, etc. This can help project leaders understand where the project is going and make evidence-based decisions. 
-# Tutorial 
-1. Run the main.py file, enjoy the process - `python main.py`
-2. When you see a Flask server running, navigate to the suggested address on localhost. Immerse yourself in the space world of beautiful numbers
 
-## Please note that some features may not run the first time, be gentle and try again
+
+## Please note that some features may not run the first time, be gentle and try again. This is due to the extremely erratic operation of the GitHub API.
