@@ -1,9 +1,10 @@
 import requests
 import pandas as pd
 import plotly.graph_objects as go
+from plate import *
 
 headers = {
-    "Authorization": "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",
+    "Authorization": access_token,
     "Accept": "application/vnd.github.v3+json"
 }
 
