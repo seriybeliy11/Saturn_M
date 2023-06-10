@@ -22,30 +22,30 @@ if response_closed.status_code == 200:
     closed_issues = response_closed.json()
     all_closed_issues = len(closed_issues)
 
-    params_labels = {
+    params_approved = {
         "state": "closed",
-        "labels": "footstep,approved",
+        "labels": "approved",
         "per_page": 100,
         "page": 1
     }
 
-    response_labels = requests.get(url_closed, headers=headers, params=params_labels)
-    if response_labels.status_code == 200:
-        labeled_issues = response_labels.json()
-        footstep_approved_issues = len(labeled_issues)
+    response_approved = requests.get(url_closed, headers=headers, params=params_approved)
+    if response_approved.status_code == 200:
+        approved_issues = response_approved.json()
+        closed_approved_issues = len(approved_issues)
 
         data = {
-            "Status": ["Closed with 'footstep' and 'approved' label", "All Closed Issues"],
-            "Count": [footstep_approved_issues, all_closed_issues]
+            "Status": ["Closed Approved Issues", "Closed Issues"],
+            "Count": [closed_approved_issues, all_closed_issues]
         }
         df = pd.DataFrame(data)
         fig = go.Figure(data=go.Pie(labels=df["Status"], values=df["Count"]))
-        fig.update_layout(title="Ratio of closed issues labeled 'footstep' and 'approved' to all closed issues")
+        fig.update_layout(title="Ratio of Closed Approved Issues to Closed Issues")
 
         fig.show()
 
     else:
-        print("Failed to retrieve closed issues with labels:", response_labels.status_code)
+        print("Failed to retrieve closed approved issues: " + str(response_approved.status_code))
 
 else:
-    print("Failed to retrieve closed issues:", response_closed.status_code)
+    print("Failed to retrieve closed issues: " + str(response_closed.status_code))
