@@ -122,10 +122,10 @@ def main():
     ############################################################################
 
 
-    # Создаем заголовок с токеном для авторизации в GitHub API
+    
     headers = {'Authorization': f'Token {access_token}'}
 
-    # Получаем issues постранично
+    
     all_issues = []
     page = 1
     while True:
