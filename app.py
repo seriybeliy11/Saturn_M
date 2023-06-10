@@ -149,4 +149,3 @@ def update_graph(clickData, date_range):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-    webbrowser.open_new('http://localhost:8050/')
