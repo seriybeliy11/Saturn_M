@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import plotly.graph_objects as go
-from plate import *
+from plate import access_token
 
 headers = {
     "Authorization": access_token,
