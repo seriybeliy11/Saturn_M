@@ -137,18 +137,17 @@ def main():
         all_issues.extend(issues)
         page += 1
 
-    # Создаем список для хранения данных
+
     issues_data = []
 
-    # Извлекаем данные для каждой проблемы
     for issue in all_issues:
         issue_data = [issue['state'], issue['title'], issue['body'], issue['created_at'], issue['updated_at']]
         issues_data.append(issue_data)
 
-    # Создаем DataFrame из полученных данных
+   
     df = pd.DataFrame(issues_data, columns=['state', 'title', 'body', 'created_at', 'updated_at'])
 
-    # Экспортируем DataFrame в CSV-файл
+   
     df.to_csv('data_issues.csv', index=False)
 
 if __name__ == "__main__":
