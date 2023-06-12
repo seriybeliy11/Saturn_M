@@ -22,8 +22,9 @@ headers = {
 url_issues = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
 
 data = []
-for date in date_list:
-    parsed_date = isoparse(date)
+for i in range(len(date_list) - 1):
+    start_date = isoparse(date_list[i])
+    end_date = isoparse(date_list[i + 1])
     page = 1
     issues = []
 
@@ -32,8 +33,8 @@ for date in date_list:
             "state": "all",
             "per_page": 100,
             "page": page,
-            "since": parsed_date.isoformat(),
-            "until": parsed_date.isoformat()
+            "since": start_date.isoformat(),
+            "until": end_date.isoformat()
         }
 
         response_date = requests.get(url_issues, headers=headers, params=params_date)
@@ -49,17 +50,46 @@ for date in date_list:
             else:
                 page += 1
         else:
-            print(f"Failed to fetch data for {parsed_date}")
+            print(f"Failed to fetch data for {start_date} - {end_date}")
             break
 
     all_issues = len(issues)
-    data.append([parsed_date, all_issues])
+    data.append([start_date, all_issues])
 
-# Create a single list combining all the parsed dates
-combined_list = [item for sublist in data for item in sublist]
+# Add the last date from the list separately
+last_date = isoparse(date_list[-1])
+page = 1
+issues = []
 
-# Create DataFrame from the combined list
-df = pd.DataFrame(combined_list, columns=["Dates", "All Issues"])
+while True:
+    params_date = {
+        "state": "all",
+        "per_page": 100,
+        "page": page,
+        "since": last_date.isoformat()
+    }
+
+    response_date = requests.get(url_issues, headers=headers, params=params_date)
+
+    time.sleep(1)
+
+    if response_date.status_code == 200:
+        issues_page = response_date.json()
+        issues.extend(issues_page)
+
+        if len(issues_page) < 100:
+            break
+        else:
+            page += 1
+    else:
+        print(f"Failed to fetch data for {last_date}")
+        break
+
+all_issues = len(issues)
+data.append([last_date, all_issues])
+
+# Create DataFrame from the obtained data
+df = pd.DataFrame(data, columns=["Dates", "All Issues"])
 
 # Save DataFrame to a CSV file
-df.to_csv("github_all_issues_combined.csv", index=False)
+df.to_csv("github_all_issues.csv", index=False)
