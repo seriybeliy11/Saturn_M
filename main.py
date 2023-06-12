@@ -4,9 +4,6 @@ import time
 import webbrowser
 import platform
 from SaturiC import *
-from flask import Flask
-
-app = Flask(__name__)
 
 
 def install_requirements(requirements_file):
@@ -16,41 +13,32 @@ def install_requirements(requirements_file):
 def run_command(command):
     if platform.system() == 'Windows':
         os.system(command)
-    elif platform.system() == 'Darwin':  # Для macOS
+    elif platform.system() == 'Darwin':  # macOS
         os.system(f"python3 {command}")
     else:
         print("Unsupported operating system.")
         sys.exit(1)
 
 
-@app.route('/bpdn')
-def app1():
-    run_command('barplots_perm_duration_and_unique_commenters.py')
-    return 'Barplots Perm Duration and Unique Commenters executed.'
-
-
-@app.route('/moneyQ')
-def app3():
-    run_command('moneq.py')
-    return 'MoneyQ executed.'
-
-
-@app.route('/closedplanned')
-def app4():
-    run_command('closed_not_planned.py')
-    return 'Closed Not Planned executed.'
-
-
-@app.route('/DTS')
-def app5():
-    run_command('dts.py')
-    return 'DTS executed.'
-
-
 def main():
     install_requirements('requirements.txt')
 
     run_command('csv_g.py')
+    run_command('parser_rewards.py')
+    print('Cooling Space Engines...')
+    time.sleep(4)
+    run_command('just_closed_getter.py')
+    time.sleep(1)
+    run_command('approved_closed_getter.py')
+    time.sleep(2)
+    run_command('all_issues_getter.py')
+    time.sleep(3)
+    run_command('approved_timelines.py')
+    time.sleep(3)
+    run_command('q_comment_getter.py')
+
+
+    time.sleep(2)
     print('--------------------------------------------')
     print('Hello! You are using the SaturiC Analyze System')
     print('--------------------------------------------')
@@ -68,7 +56,8 @@ def main():
     print('About commenters:')
     get_commenters()
 
-    app.run()
+    run_command('graphs.py')
+
 
 
 if __name__ == "__main__":
