@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import time
 from plate import access_token
 
 date_list = [
@@ -20,6 +21,9 @@ headers = {
 url_closed = "https://api.github.com/repos/ton-society/ton-footsteps/issues"
 
 data = []
+session = requests.Session()
+session.headers.update(headers)
+
 for date in date_list:
     page = 1
     per_page = 100
@@ -34,9 +38,10 @@ for date in date_list:
             "until": pd.to_datetime(date) + pd.DateOffset(months=2)  # Получение данных за 3 месяца
         }
 
-        response_date = requests.get(url_closed, headers=headers, params=params_date)
+        try:
+            response_date = session.get(url_closed, params=params_date)
+            response_date.raise_for_status()
 
-        if response_date.status_code == 200:
             issues = response_date.json()
             num_issues = len(issues)
             closed_issues += num_issues
@@ -45,8 +50,10 @@ for date in date_list:
             if num_issues < per_page:
                 break  # достигнут конец списка проблем
 
-        else:
-            print(f"Failed to fetch data for {date}")
+            time.sleep(1)  # Задержка в 1 секунду между запросами
+
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to fetch data for {date}: {e}")
             break
 
     data.append([date, closed_issues])

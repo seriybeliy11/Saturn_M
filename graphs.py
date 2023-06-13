@@ -46,7 +46,8 @@ csv_files = [DATA_CONTRIBUTORS_FILE, DATA_ISSUES_FILE, ISSUES_SORTED_FILE, ISSUE
 
 issue_numbers = []
 rewards = []
-with open(csv_file_path_rewards, mode='r') as csv_file:
+
+with open(csv_file_path_rewards, mode='r', encoding='utf-8') as csv_file:
     reader = csv.reader(csv_file)
     next(reader)
 

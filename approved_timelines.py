@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 from plate import access_token
+import time
 
 headers = {
     "Authorization": access_token,
@@ -20,6 +21,9 @@ dates = [
 ]
 
 data = []
+session = requests.Session()
+session.headers.update(headers)
+
 for date in dates:
     params_closed = {
         "state": "closed",
@@ -29,9 +33,10 @@ for date in dates:
         "until": date
     }
 
-    response_closed = requests.get(url_closed, headers=headers, params=params_closed)
+    try:
+        response_closed = session.get(url_closed, params=params_closed)
+        response_closed.raise_for_status()
 
-    if response_closed.status_code == 200:
         closed_issues = response_closed.json()
         all_closed_issues = len(closed_issues)
 
@@ -44,18 +49,22 @@ for date in dates:
             "until": date
         }
 
-        response_approved = requests.get(url_closed, headers=headers, params=params_approved)
-        if response_approved.status_code == 200:
+        time.sleep(4)  # Задержка в 4 секунды между запросами
+
+        try:
+            response_approved = session.get(url_closed, params=params_approved)
+            response_approved.raise_for_status()
+
             approved_issues = response_approved.json()
             closed_approved_issues = len(approved_issues)
 
             data.append({"Date": date, "Closed Approved Issues": closed_approved_issues, "Closed Issues": all_closed_issues})
 
-        else:
-            print("Failed to retrieve closed approved issues for date", date, ":", response_approved.status_code)
+        except requests.exceptions.RequestException as e:
+            print("Failed to retrieve closed approved issues for date", date, ":", e)
 
-    else:
-        print("Failed to retrieve closed issues for date", date, ":", response_closed.status_code)
+    except requests.exceptions.RequestException as e:
+        print("Failed to retrieve closed issues for date", date, ":", e)
 
 df = pd.DataFrame(data)
 df.to_csv("dates_data.csv", index=False)

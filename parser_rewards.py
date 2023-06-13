@@ -32,10 +32,12 @@ else:
             print(f"Error code: {response.status_code}")
             break
 
-    with open(csv_file_path, mode='w', newline='') as csv_file:
+
+    with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file)
 
         writer.writerow(['Issue Number', 'Rewards (th. $)'])
+
 
         base_url = 'https://github.com/ton-society/ton-footsteps/issues/'
 
