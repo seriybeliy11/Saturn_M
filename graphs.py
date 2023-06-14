@@ -160,16 +160,65 @@ permonthdurate_figure.update_yaxes(title_text="Duration (Days)", row=1, col=1)
 
 permonthdurate_figure.update_layout(height=700, width=2300, showlegend=True, template='plotly_white')
 
-closed_approved_data_issues = pd.read_csv("github_closed_approved_issues.csv")
-closed_approved_data_issues['Date'] = pd.to_datetime(closed_approved_data_issues['Date'])
+data_approved_new_issues = pd.read_csv('github_closed_approved_issues.csv')
 
-closed_approved_issues_figure = px.line(closed_approved_data_issues, x='Date', y='Closed Approved Issues', title='Closed Approved Issues over Time')
+for column in data_approved_new_issues.columns:
+    column_data = data_approved_new_issues[column]
+    column_df = pd.DataFrame({column: column_data})
+    column_df.to_csv(f'{column}.csv', index=False)
+
+
+data_approved_new_issues = pd.read_csv('Closed Approved Issues.csv')
+
+data_approved_new_issues.sort_values('Closed Approved Issues', inplace=True)
+
+data_approved_new_issues.to_csv('Closed Approved Issues.csv', index=False)
+
+data_approved_new_issues_dates = pd.read_csv('Date.csv')
+data_approved_new_issues_all_issues = pd.read_csv('Closed Approved Issues.csv')
+data_approved_new_issues_combined = pd.concat([data_approved_new_issues_dates, data_approved_new_issues_all_issues], axis=1)
+
+data_approved_new_issues_combined.to_csv('github_closed_approved_issues.csv', index=False)
+
+closed_data_approved_new_issues = pd.read_csv('github_closed_approved_issues.csv')
+
+closed_data_approved_new_issues['Date'] = pd.to_datetime(closed_data_approved_new_issues['Date'])
+
+
+closed_approved_issues_figure = px.line(closed_data_approved_new_issues, x='Date', y='Closed Approved Issues', title='Closed Approved Issues over Time')
+
+
+
+data_closed_data_issues = pd.read_csv('github_just_closed_issues.csv')
+
+for column in data_closed_data_issues.columns:
+    column_data = data_closed_data_issues[column]
+    column_df = pd.DataFrame({column: column_data})
+    column_df.to_csv(f'{column}.csv', index=False)
+
+
+data_just_new_issues = pd.read_csv('Closed Issues.csv')
+
+data_just_new_issues.sort_values('Closed Issues', inplace=True)
+
+data_just_new_issues.to_csv('Closed Issues.csv', index=False)
+
+data_just_new_issues_dates = pd.read_csv('Date.csv')
+data_closed_new_issues_all_issues = pd.read_csv('Closed Issues.csv')
+data_approved_new_issues_combined = pd.concat([data_just_new_issues_dates, data_closed_new_issues_all_issues], axis=1)
+
+data_approved_new_issues_combined.to_csv('github_just_closed_issues.csv', index=False)
+
+closed_data_approved_new_issues = pd.read_csv('github_just_closed_issues.csv')
+
+
 
 closed_data_issues = pd.read_csv("github_just_closed_issues.csv")
 
 closed_data_issues['Date'] = pd.to_datetime(closed_data_issues['Date'])
 
 closed_data_issues_figure = px.line(closed_data_issues, x='Date', y='Closed Issues', title='Just closed as not planned Issues over Time')
+
 
 
 data_new_issues = pd.read_csv('github_all_issues.csv')
@@ -199,12 +248,24 @@ data_new_issues_figure = px.line(data_new_issues, x='Dates', y='All Issues', tit
 # Define the layout
 app.layout = html.Div([
     html.H1("Issue's Metrics"),
+
     dcc.Graph(figure=labels_pie_chart_figure),
+    html.P("This pie chart displays the distribution of visual labels for the issues. It provides insights into the frequency or distribution of different labels."),
+
     dcc.Graph(figure=duration_diagram_figure),
+    html.P("This bar chart shows the time taken for issues to be approved or declined. It provides an overview of the duration distribution."),
+
     html.H2("Timelines:"),
+
     dcc.Graph(figure=permonthdurate_figure),
+    html.P("These bar charts display the duration of issues sorted by month. Each sub-chart represents a specific month, allowing you to compare the duration of issues over time."),
+
     dcc.Graph(figure=issues_state_pie_figure),
+    html.P("This pie chart shows the distribution of issues by their state (open, closed, etc.). It provides an overview of the distribution of issue states."),
+
     dcc.Graph(id="pie-chart"),
+    html.P("This pie chart displays the ratio of closed approved issues to all closed issues for a specific date. It helps analyze the efficiency of issue approvals on that particular date."),
+
     dcc.Slider(
         id="date-slider",
         min=0,
@@ -213,14 +274,25 @@ app.layout = html.Div([
         value=0,
         marks={i: str(approved_data["Date"].dt.strftime("%Y-%m-%d").iloc[i]) for i in range(len(approved_data))}
     ),
+
     dcc.Graph(figure=closed_approved_issues_figure),
+    html.P("This line chart shows the number of closed approved issues over time. It provides insights into the trend and fluctuations in the number of successfully closed issues."),
+
     dcc.Graph(figure=closed_data_issues_figure),
+    html.P("This line chart shows the number of newly closed issues over time. It helps identify periods of increased or decreased issue closures."),
+
     dcc.Graph(figure=data_new_issues_figure),
+    html.P("This line chart displays the number of new issues created over time. It provides insights into the trend and fluctuations in the number of newly reported issues."),
+
     html.H1("Contributions Stats"),
     dcc.Graph(figure=contribution_bar_figure),
+    html.P("This bar chart shows the overall contribution statistics, such as the number of commits, pull requests, and issues. It provides an overview of the project's development activities."),
+
     html.Div([
         html.H3("Commits Histogram"),
         dcc.Graph(id='commits-histogram', figure=commits_histo_figure),
+        html.P("This histogram displays the distribution of commits over time. It helps identify patterns, peaks, or gaps in commit activity."),
+
         dcc.RangeSlider(
             id='date-slider-histogram',
             min=data['date'].dropna().min().timestamp(),
@@ -230,13 +302,21 @@ app.layout = html.Div([
             marks={int(date.timestamp()): {'label': date.strftime('%d.%m.%Y'), 'style': {'font-size': '5px'}}
                    for date in data['date'].dropna().unique()}
         ),
+
         dcc.Graph(figure=fixue_commit_figure),
+        html.P("This pivot table displays commit counts by author and date. It provides an overview of commit activity by different authors over time."),
+    ]),
+
     html.H1('Rewards Dynamic'),
+
     dcc.Graph(figure=rewards_figure),
+    html.P("This line chart shows the dynamics of rewards over time. It provides insights into the distribution and changes in reward amounts."),
+
     html.H1('Commentators Stats'),
-    dcc.Graph(figure=unique_commenters_figure)
-    ])
+    dcc.Graph(figure=unique_commenters_figure),
+    html.P("This bar chart displays the number of unique commentators involved in the project. It helps assess community engagement and the level of interaction on the platform."),
 ])
+
 
 @app.callback(
     Output('commits-histogram', 'figure'),
