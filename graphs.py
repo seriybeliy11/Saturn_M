@@ -41,7 +41,6 @@ titles = [
 ]
 
 
-# Clean CSV files from NaT values
 csv_files = [DATA_CONTRIBUTORS_FILE, DATA_ISSUES_FILE, ISSUES_SORTED_FILE, ISSUES_DATA_FILE, CONTRIBUTORS_FILE, COMMIT_COUNTER_FILE]
 
 issue_numbers = []
@@ -53,7 +52,11 @@ with open(csv_file_path_rewards, mode='r', encoding='utf-8') as csv_file:
 
     for row in reader:
         issue_numbers.append(row[0])
-        rewards.append(float(row[1]) / 1000)
+        rewards.append(float(row[1]))
+
+total_rewards = sum(rewards)
+
+
 
 
 
@@ -308,7 +311,7 @@ app.layout = html.Div([
     ]),
 
     html.H1('Rewards Dynamic'),
-
+    html.H2(f"Total rewards: {total_rewards} $ (thousands)"),
     dcc.Graph(figure=rewards_figure),
     html.P("This line chart shows the dynamics of rewards over time. It provides insights into the distribution and changes in reward amounts."),
 

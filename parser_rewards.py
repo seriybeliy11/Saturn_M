@@ -32,29 +32,24 @@ else:
             print(f"Error code: {response.status_code}")
             break
 
-
     with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
         writer = csv.writer(csv_file)
-
         writer.writerow(['Issue Number', 'Rewards (th. $)'])
-
 
         base_url = 'https://github.com/ton-society/ton-footsteps/issues/'
 
         for page_number in page_numbers:
             url = base_url + str(page_number)
             response = requests.get(url)
-            html_content = response.content
-            text = html_content.decode('utf-8')
+            if response.status_code == 200:
+                html_content = response.content
+                text = html_content.decode('utf-8')
 
-            regex_dollar = r'\$[\d,]+'
-            rewards_dollar = re.findall(regex_dollar, text)
+                regex_dollar = r'Total: \$(\d+)'
+                rewards_dollar = re.findall(regex_dollar, text)
 
-            for reward_dollar in rewards_dollar:
-                reward_amount = reward_dollar.replace('$', '').replace(',', '')
-                if reward_amount == '1':
-                    reward_amount += '000'
-
-                writer.writerow([page_number, reward_amount])
+                for reward_dollar in rewards_dollar:
+                    reward_amount = '{:.2f}'.format(float(reward_dollar) / 1000)
+                    writer.writerow([page_number, reward_amount])
 
     print("Data Loaded")
