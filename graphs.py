@@ -52,11 +52,9 @@ with open(csv_file_path_rewards, mode='r', encoding='utf-8') as csv_file:
 
     for row in reader:
         issue_numbers.append(row[0])
-        rewards.append(float(row[1]))
+        rewards.append(float(row[1]) * 1000)
 
 total_rewards = sum(rewards)
-
-
 
 
 
@@ -311,7 +309,7 @@ app.layout = html.Div([
     ]),
 
     html.H1('Rewards Dynamic'),
-    html.H2(f"Total rewards: {total_rewards} $ (thousands)"),
+    html.H2(f"Total rewards: {total_rewards} $"),
     dcc.Graph(figure=rewards_figure),
     html.P("This line chart shows the dynamics of rewards over time. It provides insights into the distribution and changes in reward amounts."),
 
